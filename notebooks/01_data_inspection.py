@@ -1,0 +1,25 @@
+import pandas as pd 
+df = pd.read_csv("data/ibm_hr_employee_attrition_dataset.csv")
+
+print(df.shape)
+print(df.head())
+print(df.info())
+print(df['EmployeeCount'].unique())
+print(df['StandardHours'].unique())
+print(df['Over18'].unique())
+df=df.drop(columns=['EmployeeCount','StandardHours','Over18'])
+print(df.shape)
+print(df['Attrition'].value_counts())
+print(df['Attrition'].value_counts(normalize=True) * 100)
+print(df.groupby('OverTime')['Attrition'].value_counts(normalize=True).unstack()*100)
+print(df.groupby('Department')['Attrition'].value_counts(normalize=True).unstack()*100)
+print(df.groupby('Department')['OverTime'].value_counts(normalize=True).unstack()*100)
+df['annual_salary']= df['MonthlyIncome']*12
+df['replacement_cost']=df['annual_salary']*0.5
+attrition_cost= df[df['Attrition']=='Yes']['replacement_cost'].sum()
+print(f"50% replacement cost:{attrition_cost}")
+print(f"100% replacement cost:{attrition_cost*2}")
+print(f"150% replacement cost:{attrition_cost*3}")
+print(df.groupby('JobRole')['Attrition'].value_counts(normalize=True).unstack()*100)
+print(df.groupby('Attrition')['YearsAtCompany'].mean())
+print(df.groupby(['JobRole','Attrition'])['YearsAtCompany'].mean().unstack())
